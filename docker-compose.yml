@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  streamlit-monitor:
+    build: .
+    container_name: prueba-ia-monitor
+    restart: unless-stopped
+    ports:
+      - "8501:8501"
+    volumes:
+      # Persistencia de la base de datos SQLite y archivos de configuración
+      - ./monitor.db:/app/monitor.db
+    environment:
+      - PYTHONUNBUFFERED=1
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8501/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
